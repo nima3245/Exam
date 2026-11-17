@@ -14,9 +14,8 @@ not_found_handling = "single-page-application"
 [[d1_databases]]
 binding = "DB"
 database_name = "azmunyar-db"
-# بعد از ساخت دیتابیس با دستور wrangler d1 create، این ID را جایگزین کنید:
-database_id = "REPLACE_WITH_YOUR_D1_DATABASE_ID"
-
+# بعد از ساخت دیتابیس با دستور wrangler d1 create، این ID را جایگزین کنی
+database_id = "a035156c-b312-47c2-afdc-7"
 # متغیرهای محیطی (غیرمحرمانه)
 [vars]
 FRONTEND_URL = ""
