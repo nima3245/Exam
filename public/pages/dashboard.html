@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>پنل کاربری | آزمون‌یار</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: { vazir: ['Vazirmatn', 'system-ui', 'sans-serif'] },
+          colors: {
+            primary: { 50:'#eef2ff',100:'#e0e7ff',200:'#c7d2fe',300:'#a5b4fc',400:'#818cf8',500:'#6366f1',600:'#4f46e5',700:'#4338ca',800:'#3730a3',900:'#312e81' },
+            accent: { 400:'#f472b6',500:'#ec4899',600:'#db2777' }
+          },
+          animation: {
+            'fade-in': 'fadeIn 0.4s ease-out',
+            'slide-up': 'slideUp 0.4s ease-out'
+          },
+          keyframes: {
+            fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
+            slideUp: { '0%': { opacity: '0', transform: 'translateY(16px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body class="font-vazir bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 min-h-screen transition-colors duration-300">
+
+  <!-- Navbar -->
+  <nav class="sticky top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b border-slate-200/60 dark:border-slate-800/60">
+    <div class="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between">
+      <a href="../index.html" class="flex items-center gap-2">
+        <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center text-white font-bold text-sm">آ</div>
+        <span class="font-bold">آزمون‌یار</span>
+      </a>
+      <div class="flex items-center gap-3">
+        <button id="theme-toggle" class="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+          <svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+          <svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+        </button>
+        <button onclick="logout()" class="text-sm text-red-500 hover:text-red-600 font-medium">خروج</button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="max-w-5xl mx-auto px-4 py-8">
+    <!-- Welcome -->
+    <div class="mb-8 animate-slide-up">
+      <h1 class="text-2xl sm:text-3xl font-bold mb-1">سلام، <span id="dash-name">کاربر</span> 👋</h1>
+      <p class="text-slate-500 dark:text-slate-400">به پنل کاربری خود خوش آمدید</p>
+    </div>
+
+    <div class="grid lg:grid-cols-3 gap-6">
+      <!-- Subscription Card -->
+      <div id="subscription" class="lg:col-span-1">
+        <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm h-full">
+          <h2 class="font-bold text-lg mb-4 flex items-center gap-2">
+            <svg class="w-5 h-5 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
+            وضعیت اشتراک
+          </h2>
+          <div id="sub-content">
+            <!-- filled by JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="lg:col-span-2 grid sm:grid-cols-3 gap-4">
+        <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 text-center">
+          <div class="text-3xl font-extrabold text-primary-600 dark:text-primary-400" id="stat-tests">۰</div>
+          <div class="text-sm text-slate-500 mt-1">آزمون انجام‌شده</div>
+        </div>
+        <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 text-center">
+          <div class="text-3xl font-extrabold text-emerald-600 dark:text-emerald-400" id="stat-avg">۰٪</div>
+          <div class="text-sm text-slate-500 mt-1">میانگین نمره</div>
+        </div>
+        <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 text-center">
+          <div class="text-3xl font-extrabold text-amber-600 dark:text-amber-400" id="stat-best">۰٪</div>
+          <div class="text-sm text-slate-500 mt-1">بهترین نمره</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- History -->
+    <div class="mt-8">
+      <h2 class="font-bold text-lg mb-4">تاریخچه آزمون‌ها</h2>
+      <div id="history-list" class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 overflow-hidden">
+        <!-- filled by JS -->
+      </div>
+    </div>
+
+    <!-- Quick actions -->
+    <div class="mt-8 flex flex-wrap gap-3">
+      <a href="../index.html#tests" class="btn-primary px-5 py-2.5 text-sm">شروع آزمون جدید</a>
+      <a href="../index.html#pricing" class="btn-secondary px-5 py-2.5 text-sm">ارتقا اشتراک</a>
+    </div>
+  </main>
+
+  <!-- Toast -->
+  <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[200] hidden px-5 py-3 rounded-2xl shadow-xl text-sm font-medium"></div>
+
+  <script src="../js/api.js"></script>
+  <script src="../js/data.js"></script>
+  <script src="../js/auth.js"></script>
+  <script>
+    // Theme
+    (function() {
+      const saved = localStorage.getItem('azmunyar_theme');
+      if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+      }
+      document.getElementById('theme-toggle')?.addEventListener('click', () => {
+        const isDark = document.documentElement.classList.toggle('dark');
+        localStorage.setItem('azmunyar_theme', isDark ? 'dark' : 'light');
+      });
+    })();
+
+    async function refreshDashboard() {
+      if (!getToken()) {
+        window.location.href = '../index.html';
+        return;
+      }
+
+      // Refresh session from server
+      const session = await refreshSession();
+      if (!session) {
+        window.location.href = '../index.html';
+        return;
+      }
+
+      const user = session.user;
+      document.getElementById('dash-name').textContent = user.name;
+
+      // Subscription
+      const subContent = document.getElementById('sub-content');
+      const sub = session.subscription;
+      if (sub) {
+        const exp = new Date(sub.expires_at);
+        const daysLeft = Math.max(0, Math.ceil((exp - new Date()) / (1000 * 60 * 60 * 24)));
+        subContent.innerHTML = `
+          <div class="p-4 rounded-2xl bg-gradient-to-br from-primary-50 to-pink-50 dark:from-primary-950/50 dark:to-pink-950/30 border border-primary-200 dark:border-primary-800 mb-4">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse"></span>
+              <span class="font-medium text-green-700 dark:text-green-400 text-sm">فعال</span>
+            </div>
+            <div class="font-bold text-lg">${sub.plan_name || sub.plan}</div>
+            <div class="text-sm text-slate-500 mt-1">${daysLeft} روز باقی‌مانده</div>
+          </div>
+          <p class="text-xs text-slate-400">انقضا: ${exp.toLocaleDateString('fa-IR')}</p>
+        `;
+      } else {
+        subContent.innerHTML = `
+          <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 mb-4 text-center">
+            <div class="text-3xl mb-2">🆓</div>
+            <div class="font-medium mb-1">اشتراک آزاد</div>
+            <p class="text-sm text-slate-500 mb-4">فقط آزمون‌های رایگان در دسترس هستند</p>
+            <a href="../index.html#pricing" class="btn-primary text-sm w-full py-2.5 block">خرید اشتراک ویژه</a>
+          </div>
+        `;
+      }
+
+      // Stats from API
+      try {
+        const stats = await apiGetStats();
+        document.getElementById('stat-tests').textContent = (stats.count || 0).toLocaleString('fa-IR');
+        document.getElementById('stat-avg').textContent = (stats.avg || 0) + '٪';
+        document.getElementById('stat-best').textContent = (stats.best || 0) + '٪';
+      } catch (e) {
+        console.warn(e);
+      }
+
+      // History from API
+      const list = document.getElementById('history-list');
+      try {
+        const history = await apiGetResults();
+        if (!history.length) {
+          list.innerHTML = `
+            <div class="p-10 text-center text-slate-500">
+              <div class="text-4xl mb-3">📝</div>
+              <p>هنوز آزمونی انجام نداده‌اید</p>
+              <a href="../index.html#tests" class="text-primary-600 font-medium hover:underline mt-2 inline-block">شروع اولین آزمون</a>
+            </div>
+          `;
+        } else {
+          list.innerHTML = history.map(h => {
+            const test = TESTS.find(t => t.id === h.test_id);
+            const date = new Date(h.created_at).toLocaleDateString('fa-IR', { year: 'numeric', month: 'short', day: 'numeric' });
+            const color = h.percent >= 80 ? 'text-green-600 dark:text-green-400' : h.percent >= 50 ? 'text-amber-600 dark:text-amber-400' : 'text-slate-500';
+            return `
+              <div class="flex items-center justify-between px-5 py-4 border-b border-slate-100 dark:border-slate-800 last:border-0 hover:bg-slate-50 dark:hover:bg-slate-800/40 transition">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-lg">${test?.icon || '📄'}</div>
+                  <div>
+                    <div class="font-medium text-sm">${test?.title || h.test_id}</div>
+                    <div class="text-xs text-slate-500">${date}</div>
+                  </div>
+                </div>
+                <div class="text-left">
+                  <div class="font-bold ${color}">${h.percent}٪</div>
+                  <div class="text-xs text-slate-400">${h.score}/${h.total}</div>
+                </div>
+              </div>
+            `;
+          }).join('');
+        }
+      } catch (e) {
+        list.innerHTML = `<div class="p-6 text-center text-red-500">خطا در بارگذاری تاریخچه</div>`;
+      }
+    }
+
+    function showToast(message, type = 'info') {
+      const toast = document.getElementById('toast');
+      if (!toast) return;
+      const colors = { success: 'bg-green-600 text-white', error: 'bg-red-600 text-white', info: 'bg-slate-800 text-white' };
+      toast.className = `fixed bottom-6 left-1/2 -translate-x-1/2 z-[200] px-5 py-3 rounded-2xl shadow-xl text-sm font-medium animate-slide-up ${colors[type] || colors.info}`;
+      toast.textContent = message;
+      toast.classList.remove('hidden');
+      setTimeout(() => toast.classList.add('hidden'), 3500);
+    }
+
+    // Handle payment return
+    (function() {
+      const params = new URLSearchParams(window.location.search);
+      const payment = params.get('payment');
+      if (payment === 'success') {
+        showToast('پرداخت موفق! اشتراک شما فعال شد 🎉', 'success');
+        window.history.replaceState({}, '', window.location.pathname);
+      } else if (payment === 'cancelled') {
+        showToast('پرداخت لغو شد', 'info');
+        window.history.replaceState({}, '', window.location.pathname);
+      } else if (payment === 'error') {
+        showToast('خطا در تأیید پرداخت', 'error');
+        window.history.replaceState({}, '', window.location.pathname);
+      }
+    })();
+
+    refreshDashboard();
+  </script>
+  </script>
+</body>
+</html>

@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>آزمون‌یار | پلتفرم هوشمند آزمون‌های زبان</title>
+  <meta name="description" content="آزمون‌های رایگان و ویژه زبان انگلیسی با پنل کاربری و اشتراک ویژه" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: { vazir: ['Vazirmatn', 'system-ui', 'sans-serif'] },
+          colors: {
+            primary: { 50:'#eef2ff',100:'#e0e7ff',200:'#c7d2fe',300:'#a5b4fc',400:'#818cf8',500:'#6366f1',600:'#4f46e5',700:'#4338ca',800:'#3730a3',900:'#312e81' },
+            accent: { 400:'#f472b6',500:'#ec4899',600:'#db2777' }
+          },
+          animation: {
+            'fade-in': 'fadeIn 0.5s ease-out',
+            'slide-up': 'slideUp 0.5s ease-out',
+            'float': 'float 6s ease-in-out infinite'
+          },
+          keyframes: {
+            fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
+            slideUp: { '0%': { opacity: '0', transform: 'translateY(20px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
+            float: { '0%,100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-12px)' } }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="font-vazir bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-300">
+
+  <!-- Navbar -->
+  <nav id="navbar" class="fixed top-0 inset-x-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b border-slate-200/60 dark:border-slate-800/60 transition-all">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <a href="index.html" class="flex items-center gap-2 group">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center text-white font-bold text-lg shadow-lg shadow-primary-500/30 group-hover:scale-105 transition">آ</div>
+          <span class="font-bold text-lg tracking-tight">آزمون‌یار</span>
+        </a>
+
+        <div class="hidden md:flex items-center gap-1">
+          <a href="#features" class="nav-link">امکانات</a>
+          <a href="#tests" class="nav-link">آزمون‌ها</a>
+          <a href="#pricing" class="nav-link">اشتراک</a>
+          <a href="pages/dashboard.html" class="nav-link" id="nav-dashboard" style="display:none">پنل کاربری</a>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <button id="theme-toggle" class="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition" title="تغییر تم">
+            <svg id="icon-sun" class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+            <svg id="icon-moon" class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+          </button>
+
+          <div id="auth-buttons" class="flex items-center gap-2">
+            <button onclick="openModal('login')" class="btn-ghost text-sm">ورود</button>
+            <button onclick="openModal('register')" class="btn-primary text-sm">ثبت‌نام</button>
+          </div>
+
+          <div id="user-menu" class="hidden relative">
+            <button onclick="toggleUserDropdown()" class="flex items-center gap-2 p-1.5 pr-3 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition">
+              <div id="user-avatar" class="w-8 h-8 rounded-full bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center text-white text-sm font-bold"></div>
+              <span id="user-name" class="text-sm font-medium max-w-[100px] truncate"></span>
+              <svg class="w-4 h-4 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div id="user-dropdown" class="hidden absolute left-0 mt-2 w-52 bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-800 py-2 z-50 animate-fade-in">
+              <a href="pages/dashboard.html" class="dropdown-item">پنل کاربری</a>
+              <a href="pages/dashboard.html#subscription" class="dropdown-item">اشتراک من</a>
+              <div class="border-t border-slate-100 dark:border-slate-800 my-1"></div>
+              <button onclick="logout()" class="dropdown-item text-red-500 w-full text-right">خروج</button>
+            </div>
+          </div>
+
+          <button id="mobile-menu-btn" class="md:hidden p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    <!-- Mobile menu -->
+    <div id="mobile-menu" class="hidden md:hidden border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-4 py-3 space-y-1">
+      <a href="#features" class="block py-2 px-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800">امکانات</a>
+      <a href="#tests" class="block py-2 px-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800">آزمون‌ها</a>
+      <a href="#pricing" class="block py-2 px-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800">اشتراک</a>
+      <a href="pages/dashboard.html" class="block py-2 px-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800" id="mobile-dashboard" style="display:none">پنل کاربری</a>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="relative pt-28 pb-20 overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-primary-50 via-white to-pink-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950"></div>
+    <div class="absolute top-20 right-10 w-72 h-72 bg-primary-400/20 rounded-full blur-3xl animate-float"></div>
+    <div class="absolute bottom-10 left-10 w-96 h-96 bg-accent-400/15 rounded-full blur-3xl animate-float" style="animation-delay: -3s"></div>
+
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid lg:grid-cols-2 gap-12 items-center">
+        <div class="animate-slide-up">
+          <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary-100 dark:bg-primary-900/40 text-primary-700 dark:text-primary-300 text-sm font-medium mb-6">
+            <span class="w-2 h-2 rounded-full bg-primary-500 animate-pulse"></span>
+            بیش از ۱۲٬۰۰۰ کاربر فعال
+          </div>
+          <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight tracking-tight mb-6">
+            آزمون‌های زبان
+            <span class="bg-gradient-to-l from-primary-600 to-accent-500 bg-clip-text text-transparent">هوشمند</span>
+            و دقیق
+          </h1>
+          <p class="text-lg text-slate-600 dark:text-slate-400 mb-8 leading-relaxed max-w-xl">
+            با آزمون‌یار سطح زبان خود را بسنجید. آزمون‌های رایگان شروع کنید، نتیجه دقیق بگیرید و با اشتراک ویژه به آزمون‌های پیشرفته دسترسی پیدا کنید.
+          </p>
+          <div class="flex flex-wrap gap-3">
+            <a href="#tests" class="btn-primary text-base px-6 py-3">شروع آزمون رایگان</a>
+            <a href="#pricing" class="btn-secondary text-base px-6 py-3">مشاهده اشتراک‌ها</a>
+          </div>
+          <div class="mt-10 flex items-center gap-6 text-sm text-slate-500 dark:text-slate-400">
+            <div class="flex items-center gap-2">
+              <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+              بدون نیاز به کارت بانکی برای شروع
+            </div>
+            <div class="flex items-center gap-2">
+              <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+              نتیجه فوری
+            </div>
+          </div>
+        </div>
+
+        <div class="relative animate-slide-up" style="animation-delay: 0.15s">
+          <div class="relative bg-white dark:bg-slate-900 rounded-3xl shadow-2xl shadow-primary-500/10 border border-slate-200/60 dark:border-slate-800 p-6 max-w-md mx-auto">
+            <div class="flex items-center justify-between mb-5">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-primary-100 dark:bg-primary-900/50 flex items-center justify-center text-primary-600 dark:text-primary-400">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                </div>
+                <div>
+                  <div class="font-semibold">آزمون واژگان پایه</div>
+                  <div class="text-xs text-slate-500">سطح A2 · ۱۵ سوال</div>
+                </div>
+              </div>
+              <span class="px-2.5 py-1 rounded-full bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400 text-xs font-medium">رایگان</span>
+            </div>
+            <div class="space-y-3 mb-5">
+              <div class="h-2.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                <div class="h-full w-2/5 bg-gradient-to-l from-primary-500 to-accent-500 rounded-full"></div>
+              </div>
+              <div class="flex justify-between text-xs text-slate-500">
+                <span>سوال ۶ از ۱۵</span>
+                <span>۴۰٪</span>
+              </div>
+            </div>
+            <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 mb-4">
+              <p class="text-sm font-medium mb-3">کدام کلمه به معنای «پیشرفت کردن» است؟</p>
+              <div class="space-y-2">
+                <button class="w-full text-right px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-primary-400 hover:bg-primary-50 dark:hover:bg-primary-900/20 transition text-sm">Improve</button>
+                <button class="w-full text-right px-4 py-2.5 rounded-xl border-2 border-primary-500 bg-primary-50 dark:bg-primary-900/30 text-sm font-medium">Advance</button>
+                <button class="w-full text-right px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-primary-400 hover:bg-primary-50 dark:hover:bg-primary-900/20 transition text-sm">Reduce</button>
+              </div>
+            </div>
+            <div class="flex gap-2">
+              <button class="flex-1 btn-secondary text-sm py-2.5">قبلی</button>
+              <button class="flex-1 btn-primary text-sm py-2.5">بعدی</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section id="features" class="py-20 bg-white dark:bg-slate-900/50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-2xl mx-auto mb-14">
+        <h2 class="text-3xl sm:text-4xl font-bold mb-4">چرا آزمون‌یار؟</h2>
+        <p class="text-slate-600 dark:text-slate-400">طراحی شده برای یادگیری واقعی، نه فقط نمره‌گرفتن</p>
+      </div>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="feature-card">
+          <div class="w-12 h-12 rounded-2xl bg-primary-100 dark:bg-primary-900/40 text-primary-600 dark:text-primary-400 flex items-center justify-center mb-4">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+          </div>
+          <h3 class="font-bold text-lg mb-2">نتیجه فوری</h3>
+          <p class="text-sm text-slate-600 dark:text-slate-400">بلافاصله بعد از آزمون، تحلیل کامل و سطح‌بندی دریافت کنید.</p>
+        </div>
+        <div class="feature-card">
+          <div class="w-12 h-12 rounded-2xl bg-pink-100 dark:bg-pink-900/40 text-pink-600 dark:text-pink-400 flex items-center justify-center mb-4">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+          </div>
+          <h3 class="font-bold text-lg mb-2">آزمون‌های ویژه</h3>
+          <p class="text-sm text-slate-600 dark:text-slate-400">آزمون‌های پیشرفته IELTS، TOEFL و سطح‌بندی دقیق با اشتراک.</p>
+        </div>
+        <div class="feature-card">
+          <div class="w-12 h-12 rounded-2xl bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mb-4">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+          </div>
+          <h3 class="font-bold text-lg mb-2">پرداخت امن ایرانی</h3>
+          <p class="text-sm text-slate-600 dark:text-slate-400">اتصال به درگاه‌های معتبر ایرانی با پشتیبانی کامل از کارت‌های بانکی.</p>
+        </div>
+        <div class="feature-card">
+          <div class="w-12 h-12 rounded-2xl bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 flex items-center justify-center mb-4">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+          </div>
+          <h3 class="font-bold text-lg mb-2">تم تاریک و روشن</h3>
+          <p class="text-sm text-slate-600 dark:text-slate-400">محیط مطالعه راحت در هر ساعت از شبانه‌روز با پشتیبانی کامل دارک مود.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tests -->
+  <section id="tests" class="py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
+        <div>
+          <h2 class="text-3xl sm:text-4xl font-bold mb-2">آزمون‌های موجود</h2>
+          <p class="text-slate-600 dark:text-slate-400">چند سوال اول رایگان است. برای ادامه و آزمون‌های ویژه اشتراک لازم است.</p>
+        </div>
+        <div class="flex gap-2">
+          <button onclick="filterTests('all')" class="filter-btn active" data-filter="all">همه</button>
+          <button onclick="filterTests('free')" class="filter-btn" data-filter="free">رایگان</button>
+          <button onclick="filterTests('premium')" class="filter-btn" data-filter="premium">ویژه</button>
+        </div>
+      </div>
+
+      <div id="tests-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Tests injected by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing -->
+  <section id="pricing" class="py-20 bg-white dark:bg-slate-900/50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-2xl mx-auto mb-14">
+        <h2 class="text-3xl sm:text-4xl font-bold mb-4">اشتراک ویژه</h2>
+        <p class="text-slate-600 dark:text-slate-400">دسترسی نامحدود به همه آزمون‌ها + تحلیل پیشرفته</p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+        <!-- Monthly -->
+        <div class="price-card">
+          <div class="text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">ماهانه</div>
+          <div class="flex items-baseline gap-1 mb-4">
+            <span class="text-3xl font-extrabold">۱۴۹٬۰۰۰</span>
+            <span class="text-slate-500">تومان</span>
+          </div>
+          <ul class="space-y-3 mb-8 text-sm">
+            <li class="flex items-center gap-2"><svg class="w-5 h-5 text-green-500 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>همه آزمون‌های ویژه</li>
+            <li class="flex items-center gap-2"><svg class="w-5 h-5 text-green-500 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>تحلیل کامل نتایج</li>
+            <li class="flex items-center gap-2"><svg class="w-5 h-5 text-green-500 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>پشتیبانی آنلاین</li>
+          </ul>
+          <button onclick="startPayment('monthly')" class="btn-secondary w-full">خرید ماهانه</button>
+        </div>
+
+        <!-- Quarterly - Popular -->
+        <div class="price-card relative border-2 border-primary-500 shadow-xl shadow-primary-500/10 scale-[1.02]">
+          <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-gradient-to-l from-primary-600 to-accent-500 text-white text-xs font-bold">محبوب‌ترین</div>
+          <div class="text-sm font-medium text-primary-600 dark:text-primary-400 mb-1">سه‌ماهه</div>
+          <div class="flex items-baseline gap-1 mb-1">
+            <span class="text-3xl font-extrabold">۳۷۹٬۰۰۰</span>
+            <span class="text-slate-500">تومان</span>
+          </div>
+          <div class="text-xs text-green-600 dark:text-green-400 mb-4">صرفه‌جویی ۱۵٪</div>
+          <ul class="space-y-3 mb-8 text-sm">
+            <li class="flex items-center gap-2"><svg class="w-5 h-5 text-green-500 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>همه آزمون‌های ویژه</li>
+            <li class="flex items-center gap-2"><svg class="w-5 h-5 text-green-500 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>تحلیل کامل + پیشنهاد شخصی</li>
+            <li class="flex items-center gap-2"><svg class="w-5 h-5 text-green-500 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>دانلود کارنامه PDF</li>
+            <li class="flex items-center gap-2"><svg class="w-5 h-5 text-green-500 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>پشتیبانی اولویت‌دار</li>
+          </ul>
+          <button onclick="startPayment('quarterly')" class="btn-primary w-full">خرید سه‌ماهه</button>
+        </div>
+
+        <!-- Yearly -->
+        <div class="price-card">
+          <div class="text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">سالانه</div>
+          <div class="flex items-baseline gap-1 mb-1">
+            <span class="text-3xl font-extrabold">۹۹۹٬۰۰۰</span>
+            <span class="text-slate-500">تومان</span>
+          </div>
+          <div class="text-xs text-green-600 dark:text-green-400 mb-4">صرفه‌جویی ۴۴٪</div>
+          <ul class="space-y-3 mb-8 text-sm">
+            <li class="flex items-center gap-2"><svg class="w-5 h-5 text-green-500 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>همه امکانات سه‌ماهه</li>
+            <li class="flex items-center gap-2"><svg class="w-5 h-5 text-green-500 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>دسترسی زودهنگام به آزمون‌های جدید</li>
+            <li class="flex items-center gap-2"><svg class="w-5 h-5 text-green-500 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>مشاوره یک‌به‌یک (۱ جلسه)</li>
+          </ul>
+          <button onclick="startPayment('yearly')" class="btn-secondary w-full">خرید سالانه</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-200 dark:border-slate-800 py-12 bg-slate-50 dark:bg-slate-950">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center text-white font-bold text-sm">آ</div>
+          <span class="font-bold">آزمون‌یار</span>
+        </div>
+        <p class="text-sm text-slate-500 dark:text-slate-400 text-center">© ۱۴۰۴ آزمون‌یار · ساخته شده با دقت برای یادگیری بهتر زبان</p>
+        <div class="flex gap-4 text-sm text-slate-500">
+          <a href="#" class="hover:text-primary-600 transition">قوانین</a>
+          <a href="#" class="hover:text-primary-600 transition">حریم خصوصی</a>
+          <a href="#" class="hover:text-primary-600 transition">تماس</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Auth Modal -->
+  <div id="auth-modal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4">
+    <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="closeModal()"></div>
+    <div class="relative bg-white dark:bg-slate-900 rounded-3xl shadow-2xl w-full max-w-md p-6 sm:p-8 animate-slide-up">
+      <button onclick="closeModal()" class="absolute top-4 left-4 p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+
+      <div id="login-form">
+        <h3 class="text-2xl font-bold mb-1">ورود به حساب</h3>
+        <p class="text-sm text-slate-500 mb-6">به آزمون‌یار خوش آمدید</p>
+        <form onsubmit="handleLogin(event)" class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium mb-1.5">ایمیل</label>
+            <input type="email" id="login-email" required class="input-field" placeholder="you@example.com" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1.5">رمز عبور</label>
+            <input type="password" id="login-password" required class="input-field" placeholder="••••••••" />
+          </div>
+          <button type="submit" class="btn-primary w-full py-3">ورود</button>
+        </form>
+        <p class="text-center text-sm text-slate-500 mt-5">حساب ندارید؟ <button onclick="switchAuth('register')" class="text-primary-600 font-medium hover:underline">ثبت‌نام کنید</button></p>
+      </div>
+
+      <div id="register-form" class="hidden">
+        <h3 class="text-2xl font-bold mb-1">ساخت حساب جدید</h3>
+        <p class="text-sm text-slate-500 mb-6">کمتر از یک دقیقه طول می‌کشد</p>
+        <form onsubmit="handleRegister(event)" class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium mb-1.5">نام</label>
+            <input type="text" id="reg-name" required class="input-field" placeholder="نام شما" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1.5">ایمیل</label>
+            <input type="email" id="reg-email" required class="input-field" placeholder="you@example.com" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1.5">رمز عبور</label>
+            <input type="password" id="reg-password" required minlength="6" class="input-field" placeholder="حداقل ۶ کاراکتر" />
+          </div>
+          <button type="submit" class="btn-primary w-full py-3">ثبت‌نام</button>
+        </form>
+        <p class="text-center text-sm text-slate-500 mt-5">قبلاً ثبت‌نام کرده‌اید؟ <button onclick="switchAuth('login')" class="text-primary-600 font-medium hover:underline">ورود</button></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Payment Modal (Iranian Gateway Simulation) -->
+  <div id="payment-modal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4">
+    <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="closePaymentModal()"></div>
+    <div class="relative bg-white dark:bg-slate-900 rounded-3xl shadow-2xl w-full max-w-md p-6 sm:p-8 animate-slide-up">
+      <button onclick="closePaymentModal()" class="absolute top-4 left-4 p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+
+      <div class="text-center mb-6">
+        <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center text-white mb-4 shadow-lg shadow-green-500/30">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+        </div>
+        <h3 class="text-xl font-bold">درگاه پرداخت امن</h3>
+        <p class="text-sm text-slate-500 mt-1">اتصال امن به درگاه زرین‌پال</p>
+      </div>
+
+      <div class="bg-slate-50 dark:bg-slate-800/60 rounded-2xl p-4 mb-6 space-y-2 text-sm">
+        <div class="flex justify-between"><span class="text-slate-500">پلن</span><span id="pay-plan-name" class="font-medium"></span></div>
+        <div class="flex justify-between"><span class="text-slate-500">مبلغ</span><span id="pay-amount" class="font-bold text-lg"></span></div>
+        <div class="flex justify-between"><span class="text-slate-500">شماره سفارش</span><span id="pay-order-id" class="font-mono text-xs"></span></div>
+      </div>
+
+      <div class="bg-blue-50 dark:bg-blue-950/40 rounded-2xl p-4 mb-6 text-sm text-blue-800 dark:text-blue-300">
+        پس از کلیک، به درگاه امن زرین‌پال هدایت می‌شوید. بعد از پرداخت موفق، اشتراک شما به‌صورت خودکار فعال می‌شود.
+      </div>
+
+      <button onclick="confirmPayment()" class="btn-primary w-full py-3.5 text-base flex items-center justify-center gap-2">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+        ادامه و پرداخت
+      </button>
+      <p class="text-xs text-center text-slate-400 mt-4">پرداخت از طریق درگاه معتبر بانکی انجام می‌شود.</p>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[200] hidden px-5 py-3 rounded-2xl shadow-xl text-sm font-medium animate-slide-up"></div>
+
+  <script src="js/api.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

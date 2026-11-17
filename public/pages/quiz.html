@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>آزمون | آزمون‌یار</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: { vazir: ['Vazirmatn', 'system-ui', 'sans-serif'] },
+          colors: {
+            primary: { 50:'#eef2ff',100:'#e0e7ff',200:'#c7d2fe',300:'#a5b4fc',400:'#818cf8',500:'#6366f1',600:'#4f46e5',700:'#4338ca',800:'#3730a3',900:'#312e81' },
+            accent: { 400:'#f472b6',500:'#ec4899',600:'#db2777' }
+          },
+          animation: {
+            'fade-in': 'fadeIn 0.4s ease-out',
+            'slide-up': 'slideUp 0.4s ease-out'
+          },
+          keyframes: {
+            fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
+            slideUp: { '0%': { opacity: '0', transform: 'translateY(16px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body class="font-vazir bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 min-h-screen transition-colors duration-300">
+
+  <!-- Top bar -->
+  <header class="sticky top-0 z-40 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b border-slate-200/60 dark:border-slate-800/60">
+    <div class="max-w-3xl mx-auto px-4 h-14 flex items-center justify-between">
+      <a href="../index.html" class="flex items-center gap-2 text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-primary-600 transition">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+        بازگشت
+      </a>
+      <div id="quiz-title" class="font-semibold text-sm truncate max-w-[180px] sm:max-w-xs"></div>
+      <button id="theme-toggle" class="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+        <svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+        <svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main class="max-w-3xl mx-auto px-4 py-8">
+    <!-- Progress -->
+    <div id="progress-section" class="mb-8">
+      <div class="flex justify-between text-sm text-slate-500 mb-2">
+        <span id="progress-text">سوال ۱ از ۱۲</span>
+        <span id="progress-percent">۰٪</span>
+      </div>
+      <div class="h-2.5 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
+        <div id="progress-bar" class="h-full bg-gradient-to-l from-primary-500 to-accent-500 rounded-full transition-all duration-500" style="width: 0%"></div>
+      </div>
+    </div>
+
+    <!-- Question Card -->
+    <div id="question-card" class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl shadow-slate-200/50 dark:shadow-none p-6 sm:p-8 animate-slide-up">
+      <div id="question-number" class="text-sm font-medium text-primary-600 dark:text-primary-400 mb-3"></div>
+      <h2 id="question-text" class="text-xl sm:text-2xl font-bold leading-relaxed mb-8"></h2>
+      <div id="options-container" class="space-y-3"></div>
+    </div>
+
+    <!-- Navigation -->
+    <div id="nav-buttons" class="flex gap-3 mt-6">
+      <button id="btn-prev" onclick="prevQuestion()" class="btn-secondary flex-1 py-3 disabled:opacity-40 disabled:pointer-events-none" disabled>قبلی</button>
+      <button id="btn-next" onclick="nextQuestion()" class="btn-primary flex-1 py-3">بعدی</button>
+    </div>
+
+    <!-- Paywall -->
+    <div id="paywall" class="hidden mt-8">
+      <div class="bg-gradient-to-br from-primary-50 to-pink-50 dark:from-primary-950/40 dark:to-pink-950/30 rounded-3xl border border-primary-200 dark:border-primary-800 p-8 text-center">
+        <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center text-white text-2xl mb-5 shadow-lg shadow-primary-500/30">🔒</div>
+        <h3 class="text-2xl font-bold mb-2">ادامه آزمون نیاز به اشتراک دارد</h3>
+        <p class="text-slate-600 dark:text-slate-400 mb-6 max-w-md mx-auto">شما به حد سوالات رایگان رسیده‌اید. با فعال‌سازی اشتراک ویژه، به همه سوالات و آزمون‌های پیشرفته دسترسی پیدا کنید.</p>
+        <div class="flex flex-col sm:flex-row gap-3 justify-center">
+          <a href="../index.html#pricing" class="btn-primary px-8 py-3">مشاهده اشتراک‌ها</a>
+          <button onclick="finishQuizEarly()" class="btn-secondary px-8 py-3">مشاهده نتیجه تا اینجا</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Result -->
+    <div id="result-section" class="hidden animate-slide-up">
+      <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 p-8 text-center shadow-xl">
+        <div id="result-icon" class="w-20 h-20 mx-auto rounded-full flex items-center justify-center text-4xl mb-5"></div>
+        <h2 class="text-2xl font-bold mb-2">نتیجه آزمون</h2>
+        <p id="result-title" class="text-slate-500 mb-6"></p>
+        <div class="text-5xl font-extrabold bg-gradient-to-l from-primary-600 to-accent-500 bg-clip-text text-transparent mb-2">
+          <span id="result-score">0</span>/<span id="result-total">0</span>
+        </div>
+        <div id="result-percent" class="text-lg font-medium text-slate-600 dark:text-slate-400 mb-8"></div>
+        <div class="flex flex-col sm:flex-row gap-3 justify-center">
+          <a href="../index.html#tests" class="btn-primary px-6 py-3">آزمون‌های دیگر</a>
+          <a href="dashboard.html" class="btn-secondary px-6 py-3">پنل کاربری</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Toast -->
+  <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-[200] hidden px-5 py-3 rounded-2xl shadow-xl text-sm font-medium"></div>
+
+  <script src="../js/api.js"></script>
+  <script src="../js/data.js"></script>
+  <script src="../js/auth.js"></script>
+  <script>
+    // Theme
+    (function() {
+      const saved = localStorage.getItem('azmunyar_theme');
+      if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+      }
+      document.getElementById('theme-toggle')?.addEventListener('click', () => {
+        const isDark = document.documentElement.classList.toggle('dark');
+        localStorage.setItem('azmunyar_theme', isDark ? 'dark' : 'light');
+      });
+    })();
+
+    // Quiz state
+    let currentTest = null;
+    let currentIndex = 0;
+    let answers = [];
+    let isFinished = false;
+    let freeLimitReached = false;
+
+    const params = new URLSearchParams(window.location.search);
+    const testId = params.get('id');
+
+    function init() {
+      currentTest = TESTS.find(t => t.id === testId);
+      if (!currentTest) {
+        window.location.href = '../index.html';
+        return;
+      }
+
+      // چک اشتراک برای آزمون‌های ویژه
+      if (currentTest.type === 'premium' && !hasPremium()) {
+        document.getElementById('question-card').innerHTML = `
+          <div class="text-center py-8">
+            <div class="text-5xl mb-4">🔒</div>
+            <h2 class="text-xl font-bold mb-2">این آزمون ویژه است</h2>
+            <p class="text-slate-500 mb-6">برای شرکت در این آزمون نیاز به اشتراک فعال دارید.</p>
+            <a href="../index.html#pricing" class="btn-primary px-6 py-3 inline-block">خرید اشتراک</a>
+          </div>
+        `;
+        document.getElementById('nav-buttons').classList.add('hidden');
+        document.getElementById('progress-section').classList.add('hidden');
+        return;
+      }
+
+      document.getElementById('quiz-title').textContent = currentTest.title;
+      answers = new Array(currentTest.questions.length).fill(null);
+      renderQuestion();
+    }
+
+    function renderQuestion() {
+      if (isFinished) return;
+
+      const q = currentTest.questions[currentIndex];
+      const total = currentTest.questions.length;
+      const freeLimit = currentTest.freeLimit || 0;
+
+      // چک محدودیت رایگان
+      if (currentTest.type === 'free' && !hasPremium() && currentIndex >= freeLimit) {
+        freeLimitReached = true;
+        document.getElementById('question-card').classList.add('hidden');
+        document.getElementById('nav-buttons').classList.add('hidden');
+        document.getElementById('paywall').classList.remove('hidden');
+        return;
+      }
+
+      document.getElementById('question-number').textContent = `سوال ${currentIndex + 1}`;
+      document.getElementById('question-text').textContent = q.q;
+
+      const container = document.getElementById('options-container');
+      container.innerHTML = q.options.map((opt, i) => `
+        <button class="option-btn ${answers[currentIndex] === i ? 'selected' : ''}" onclick="selectOption(${i})">
+          <span class="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-slate-100 dark:bg-slate-800 text-xs font-bold ml-3">${['الف','ب','ج','د'][i]}</span>
+          ${opt}
+        </button>
+      `).join('');
+
+      // Progress
+      const percent = Math.round(((currentIndex) / total) * 100);
+      document.getElementById('progress-bar').style.width = percent + '%';
+      document.getElementById('progress-text').textContent = `سوال ${currentIndex + 1} از ${total}`;
+      document.getElementById('progress-percent').textContent = percent + '٪';
+
+      // Buttons
+      document.getElementById('btn-prev').disabled = currentIndex === 0;
+      const nextBtn = document.getElementById('btn-next');
+      if (currentIndex === total - 1) {
+        nextBtn.textContent = 'پایان آزمون';
+      } else {
+        nextBtn.textContent = 'بعدی';
+      }
+    }
+
+    function selectOption(index) {
+      if (isFinished) return;
+      answers[currentIndex] = index;
+      renderQuestion();
+    }
+
+    function prevQuestion() {
+      if (currentIndex > 0) {
+        currentIndex--;
+        renderQuestion();
+      }
+    }
+
+    function nextQuestion() {
+      if (answers[currentIndex] === null) {
+        showToast('لطفاً یک گزینه انتخاب کنید', 'error');
+        return;
+      }
+
+      if (currentIndex < currentTest.questions.length - 1) {
+        currentIndex++;
+        renderQuestion();
+      } else {
+        finishQuiz();
+      }
+    }
+
+    function finishQuizEarly() {
+      // فقط سوالات پاسخ‌داده تا اینجا
+      finishQuiz(true);
+    }
+
+    function finishQuiz(early = false) {
+      isFinished = true;
+      document.getElementById('question-card').classList.add('hidden');
+      document.getElementById('nav-buttons').classList.add('hidden');
+      document.getElementById('paywall').classList.add('hidden');
+      document.getElementById('progress-section').classList.add('hidden');
+
+      let score = 0;
+      let answered = 0;
+      answers.forEach((ans, i) => {
+        if (ans !== null) {
+          answered++;
+          if (ans === currentTest.questions[i].correct) score++;
+        }
+      });
+
+      const total = early ? answered : currentTest.questions.length;
+      const percent = total > 0 ? Math.round((score / total) * 100) : 0;
+
+      if (isLoggedIn()) {
+        recordTestResult(currentTest.id, score, total);
+      }
+
+      document.getElementById('result-section').classList.remove('hidden');
+      document.getElementById('result-score').textContent = score;
+      document.getElementById('result-total').textContent = total;
+      document.getElementById('result-percent').textContent = percent + '٪ پاسخ صحیح';
+      document.getElementById('result-title').textContent = currentTest.title;
+
+      const icon = document.getElementById('result-icon');
+      if (percent >= 80) {
+        icon.className = 'w-20 h-20 mx-auto rounded-full flex items-center justify-center text-4xl mb-5 bg-green-100 dark:bg-green-900/40';
+        icon.textContent = '🏆';
+      } else if (percent >= 50) {
+        icon.className = 'w-20 h-20 mx-auto rounded-full flex items-center justify-center text-4xl mb-5 bg-amber-100 dark:bg-amber-900/40';
+        icon.textContent = '👍';
+      } else {
+        icon.className = 'w-20 h-20 mx-auto rounded-full flex items-center justify-center text-4xl mb-5 bg-slate-100 dark:bg-slate-800';
+        icon.textContent = '📚';
+      }
+    }
+
+    function showToast(message, type = 'info') {
+      const toast = document.getElementById('toast');
+      const colors = {
+        success: 'bg-green-600 text-white',
+        error: 'bg-red-600 text-white',
+        info: 'bg-slate-800 text-white'
+      };
+      toast.className = `fixed bottom-6 left-1/2 -translate-x-1/2 z-[200] px-5 py-3 rounded-2xl shadow-xl text-sm font-medium animate-slide-up ${colors[type] || colors.info}`;
+      toast.textContent = message;
+      toast.classList.remove('hidden');
+      setTimeout(() => toast.classList.add('hidden'), 3000);
+    }
+
+    init();
+  </script>
+</body>
+</html>
