@@ -1,0 +1,29 @@
+# آزمون‌یار — Cloudflare Worker
+name = "azmunyar"
+main = "src/index.js"
+compatibility_date = "2024-11-01"
+compatibility_flags = ["nodejs_compat"]
+
+# فایل‌های استاتیک (فرانت‌اند)
+[assets]
+directory = "./public"
+binding = "ASSETS"
+not_found_handling = "single-page-application"
+
+# دیتابیس D1
+[[d1_databases]]
+binding = "DB"
+database_name = "azmunyar-db"
+# بعد از ساخت دیتابیس با دستور wrangler d1 create، این ID را جایگزین کنید:
+database_id = "REPLACE_WITH_YOUR_D1_DATABASE_ID"
+
+# متغیرهای محیطی (غیرمحرمانه)
+[vars]
+FRONTEND_URL = ""
+ZARINPAL_SANDBOX = "true"
+
+# اسرار را با دستور زیر ست کنید (در داشبورد یا CLI):
+# wrangler secret put JWT_SECRET
+# wrangler secret put ZARINPAL_MERCHANT_ID
+#
+# برای توسعه محلی فایل .dev.vars بسازید (نمونه در .dev.vars.example)

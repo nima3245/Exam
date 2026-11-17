@@ -1,0 +1,17 @@
+{
+  "name": "azmunyar-worker",
+  "version": "1.0.0",
+  "private": true,
+  "description": "آزمون‌یار — Cloudflare Worker + D1",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "db:create": "wrangler d1 create azmunyar-db",
+    "db:migrate:local": "wrangler d1 execute azmunyar-db --local --file=./migrations/0001_init.sql",
+    "db:migrate": "wrangler d1 execute azmunyar-db --remote --file=./migrations/0001_init.sql",
+    "tail": "wrangler tail"
+  },
+  "devDependencies": {
+    "wrangler": "^4.0.0"
+  }
+}
